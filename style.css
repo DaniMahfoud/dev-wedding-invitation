@@ -11,9 +11,7 @@ body {
 body {
     margin: 0;
     font-family: "Poppins", sans-serif;
-    /* overflow-x: hidden; hide horizontal scroll */
-    /* overflow-y: auto; allow vertical scroll if slide content is too tall */
-    color: white;
+    color: black;
 }
 
 .background-override {
@@ -631,4 +629,72 @@ p {
         transform: translateY(-220px) scale(0.8) rotate(-20deg);
         opacity: 0;
     }
+}
+
+
+
+
+
+
+
+
+/* =========================
+   SCROLL UX (after intro)
+   ========================= */
+
+/* Allow normal page scrolling */
+html,
+body {
+    height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: #c5c5c5;
+}
+
+/* The original slides container becomes a normal page wrapper */
+#slides {
+    height: auto;
+    width: 100%;
+    display: block;
+    overflow: visible;
+}
+
+/* Intro stays fullscreen */
+#intro-screen {
+    height: 100vh;
+    width: 100%;
+}
+
+/* Scroll content is hidden until user clicks start */
+#scrollPage {
+    display: none;
+    width: 100%;
+    min-height: 100vh;
+    padding: 24px 16px 80px;
+    box-sizing: border-box;
+}
+
+/* Each former slide becomes a vertical section */
+#scrollPage .slide {
+    min-width: unset;
+    height: auto;
+    overflow: visible;
+    padding: 64px 20px;
+    box-sizing: border-box;
+}
+
+/* Reduce special padding for vertical layout */
+#scrollPage .slide-special {
+    padding-top: 64px !important;
+    justify-content: center !important;
+}
+
+/* Swipe indicator not needed */
+#scrollPage .swipe-indicator {
+    display: none !important;
+}
+
+/* Utility */
+.hidden {
+    display: none !important;
 }
