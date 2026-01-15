@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="[GroomName] & [BrideName] Wedding Invitation" />
+    <meta property="og:description"
+        content="Join us in celebrating the love story of [GroomName] & [BrideName]! [Our Special Sentence]" />
+    <meta property="og:image" content="https://domain.com/cover.jpg" />
+    <meta property="og:url" content="https://domain.com/" />
+    <meta property="og:logo" content="https://domain.com/cover.jpg" />
+    <meta property="og:type" content="website" />
+    <meta name="viewport" content="width=375, user-scalable=no">
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css" />
+
+    <title>[GroomName] & [BrideName] Wedding Invitation</title>
+</head>
+
+<body>
+    <!-- Tap to Start Overlay -->
+    <!-- <div id="tap-to-start-overlay" onclick="startExperience()">
+        <div class="overlay-content">
+            <p class="">Unveil the Big Day</p>
+            <div class="animated-arrow">↓</div>
+        </div>
+    </div> -->
+
+    <div id="sticky-countdown">
+        <span id="countdown-timer-sticky">Loading...</span>
+    </div>
+
+    <div class="background-wrapper">
+        <video class="background-video" autoplay loop muted playsinline>
+            <source src="background.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <audio id="background-music" loop autoplay>
+        <source src="music.mp3" type="audio/mp3" />
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Music Play/Pause Button -->
+    <button class="music-button" id="music-button" onclick="toggleMusic()">
+        <i class="fas fa-play"></i>
+    </button>
+
+    <div class="container" id="slides">
+        <!-- Start of First Screen -->
+        <div class="slide active background-overlay" id="welcome">
+            <div class="content-wrapper">
+                <div class="start-button" onclick="firstSlide()">Join Us On Our Journey</div>
+                <div style="padding-top: 4px;" onclick="firstSlide()">Click to start</div>
+            </div>
+        </div>
+        <!-- End of First Screen -->
+
+        <!-- Start of Countdown Screen -->
+        <div class="slide active background-overlay" id="welcome">
+            <div class="content-wrapper">
+                <div class="countdown-container">
+                    <h2 class="countdown-title" style="margin-top: 0px;">Our journey begins in</h2>
+                    <div id="countdown-timer" class="countdown">Loading...</div>
+                </div>
+            </div>
+            <div class="swipe-indicator">
+                <i class="fas fa-arrow-left"></i> Swipe Left
+            </div>
+        </div>
+        <!-- End of Countdown Screen -->
+
+        <div class="slide background-overlay" style="padding-top: 15%; justify-content: start;" id="invitation">
+            <div class="content-wrapper">
+                <h2>
+                    "[A sentence...]"
+                </h2>
+                <div>[If Needed]</div>
+                <div class="parents-row">
+                    <div class="parents-column">
+                        <div>[ParentsName]</div>
+                        <div>[ParentsFamilyName]</div>
+                    </div>
+                    <div class="ampersand">&</div>
+                    <div class="parents-column">
+                        <div>[ParentsName]</div>
+                        <div>[ParentsFamilyName]</div>
+                    </div>
+                </div>
+                <p>Request the honor of your presence at the wedding of their son and daughter</p>
+                <h1 style="padding-top: 12px; font-size: 64px;"> [GroomName] & [BrideName]</h1>
+            </div>
+        </div>
+
+        <div class="slide slide-special background-overlay" id="details">
+            <div class="content-wrapper" style="gap: 8px;">
+                <h1>Wedding Details</h1>
+                <div class="content-wrapper" style="gap: 20px;">
+                    <!-- Calendar Container -->
+                    <div class="calendar-container">
+                        <h2>July 2025</h2>
+                        <div class="calendar-grid">
+                            <!-- Weekday headers -->
+                            <div class="day-of-week">Sun</div>
+                            <div class="day-of-week">Mon</div>
+                            <div class="day-of-week">Tue</div>
+                            <div class="day-of-week">Wed</div>
+                            <div class="day-of-week">Thu</div>
+                            <div class="day-of-week">Fri</div>
+                            <div class="day-of-week">Sat</div>
+
+                            <!-- Blank cells before July 1 (since July 1, 2025 is a Tuesday) -->
+                            <div></div>
+                            <div></div>
+                            <div>1</div>
+                            <div>2</div>
+                            <div>3</div>
+                            <div>4</div>
+                            <div>5</div>
+                            <div>6</div>
+                            <div>7</div>
+                            <div>8</div>
+                            <div>9</div>
+                            <div>10</div>
+                            <div>11</div>
+                            <div>12</div>
+                            <div>13</div>
+                            <div>14</div>
+                            <div>15</div>
+                            <div>16</div>
+                            <div>17</div>
+                            <div>18</div>
+                            <!-- The highlighted 19th -->
+                            <div class="heart-day">
+                                <span>19</span>
+                            </div>
+                            <div>20</div>
+                            <div>21</div>
+                            <div>22</div>
+                            <div>23</div>
+                            <div>24</div>
+                            <div>25</div>
+                            <div>26</div>
+                            <div>27</div>
+                            <div>28</div>
+                            <div>29</div>
+                            <div>30</div>
+                            <div>31</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide slide-special background-overlay" id="details-location">
+            <div class="content-wrapper"
+                style="max-width: 600px; margin: auto; padding: 24px; text-align: center; display: flex; flex-direction: column; gap: 20px; margin-bottom: 300px;">
+                <h1 style="font-size: 2rem; letter-spacing: 1px; text-transform: uppercase;">Time & Locations</h1>
+
+                <!-- Groom Info -->
+                <div style="color: #fff;">
+                    <i class="fas fa-house" style="font-size: 2rem;"></i>
+                    <h1 style="margin: 12px 0 4px;">Groom's House</h1>
+                    <a href="https://maps.app.goo.gl/L9KpVMrGp5ZUYzmq9?g_st=aw" target="_blank"
+                        style="padding: 10px 35px; border: 1px solid #fff; border-radius: 30px; text-decoration: none; color: #fff; display: inline-block;">
+                        Location
+                    </a>
+                </div>
+
+                <!-- Bride Info -->
+                <div style="color: #fff;">
+                    <i class="fas fa-house" style="font-size: 2rem;"></i>
+                    <h1 style="margin: 12px 0 4px;">Bride's House</h1>
+                    <a href="" target="_blank"
+                        style="padding: 10px 35px; border: 1px solid #fff; border-radius: 30px; text-decoration: none; color: #fff; display: inline-block;">
+                        Location
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="slide slide-special background-overlay" id="details-location">
+            <div class="content-wrapper"
+                style="max-width: 600px; margin: auto; text-align: center; display: flex; flex-direction: column; margin-bottom: 300px;">
+                <h1 style="font-size: 2rem; letter-spacing: 1px; text-transform: uppercase;">Time & Locations</h1>
+
+                <!-- Church Info -->
+                <div style="color: #fff;">
+                    <i class="fas fa-church" style="font-size: 2rem;"></i>
+                    <h1 style="margin: 12px 0 4px; font-size: 2rem;">[ChurchName]</h1>
+                    <p style="margin-bottom: 16px; font-size: 1.5rem;">[WeddingTime]</p>
+                    <a href="" target="_blank"
+                        style="padding: 10px 35px; border: 1px solid #fff; border-radius: 30px; text-decoration: none; color: #fff; display: inline-block;">
+                        Church Location
+                    </a>
+                </div>
+
+                <!-- Venue Info -->
+                <div style="color: #fff;">
+                    <i class="fas fa-map-marker-alt" style="font-size: 2rem; margin-top: 5px;"></i>
+                    <h1 style="margin: 12px 0 4px; font-size: 2rem;">[VenueName]</h1>
+                    <p style="margin-bottom: 16px; font-size: 1.5rem;">[VenueTime]</p>
+                    <a href="" target="_blank"
+                        style="padding: 10px 35px; border: 1px solid #fff; border-radius: 30px; text-decoration: none; color: #fff; display: inline-block;">
+                        Venue Location
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="slide slide-special background-overlay" id="gift-registry">
+            <div class="content-wrapper">
+                <h1 style="padding-bottom: 45px;">Gift Registry</h1>
+                <p>
+                    Your love, joy, and presence mean the world to us on our special day. If you'd like, a wedding
+                    registry is available at<br><br><br><br>Whish Money<br>
+                </p>
+                <p>Account Number: [AccountNumber]</p>
+            </div>
+        </div>
+
+        <div class="slide slide-special background-overlay" id="rsvp">
+            <div class="content-wrapper">
+                <h1>RSVP</h1>
+                <p style="padding-top: 40px; padding-bottom: 40px;">We'd love to celebrate with you! Please let us know
+                    if you can make it by [Deadline].</p>
+                <button>Confirm Attendance</button>
+            </div>
+            <!-- <div
+                style="position: fixed;bottom: 50px;left: 0;width: 100%;text-align: center;font-size: 1rem;color: #b3b3b3;font-family: 'Playfair Display', serif;padding: 8px 16px;box-sizing: border-box;">
+                Powered by <strong>Dani M.</strong><br>
+                <a href="https://wa.me/971589610054" target="_blank" style="color: #b3b3b3; text-decoration: none;">
+                    +971 58 961 00 54
+                </a>
+            </div> -->
+        </div>
+
+    </div>
+    </div>
+
+    <!-- RSVP Modal -->
+    <div id="rsvp-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <!-- We show the name or instructions here -->
+            <p> <strong id="selected-name"></strong></p>
+
+            <!-- Guest Count Input -->
+            <div id="guest-count">
+                <p id="guest-limit"></p>
+                <div class="guest-input-container">
+                    <button type="button" class="guest-btn" onclick="decreaseGuest()">−</button>
+                    <input type="number" id="guest-number" value="1" min="1" />
+                    <button type="button" class="guest-btn" onclick="increaseGuest()">+</button>
+                </div>
+            </div>
+
+            <!-- Centered Confirm Button -->
+            <button id="confirm-button" onclick="confirmRSVP()" style="display: none;">Confirm Attendance</button>
+        </div>
+    </div>
+    <div id="rsvp-confirm-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeConfirmationModal()">&times;</span>
+            <p id="confirmation-message"></p>
+        </div>
+    </div>
+
+    <!-- Start of Loading Screen -->
+    <div id="loading-screen">
+        <script>document.getElementById("slides").style.display = "none"; </script>
+        <div class="loading-content">
+            <p>Loading your invitation</p>
+            <div class="dots-loader">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Loading Screen -->
+
+    <script src="script.js"></script>
+</body>
+
+</html>
