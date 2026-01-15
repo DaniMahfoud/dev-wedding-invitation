@@ -1,124 +1,96 @@
 let xDown = null;
 let invitees = [];
-let currentIndex = 0;
+let currentIndex = 0; // kept but no longer used for slide movement
 let isPlaying = false;
 let selectedInvitee = null;
-const slides = document.querySelectorAll(".slide");
+
 const music = document.getElementById("background-music");
 const musicButton = document.getElementById("music-button");
 const weddingDate = new Date("July 19, 2025 18:30:00").getTime();
 
+// keep hardcoded const for testing
+let encodedKey = "Whvw#Idplo|";
+invitees = [
+    { name: "Test Family", rsvp: "Pending", maxGuests: 2, confirmedGuests: 0 },
+    { name: "Bob Smith", rsvp: "Confirmed", maxGuests: 1, confirmedGuests: 1 },
+    { name: "Charlie Brown", rsvp: "Pending", maxGuests: 0, confirmedGuests: 0 }
+];
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Only start countdown if the link is valid, i.e. after hideLoadingScreen() is called
-    // so that #countdown-timer is visible in the DOM.
     startCountdown();
-    startCountdownSticky();
+
+    // RSVP button listener (make sure #rsvp exists in DOM)
+    const rsvpBtn = document.querySelector("#rsvp button");
+    if (rsvpBtn) rsvpBtn.addEventListener("click", openModal);
+
+    fetchInvitees();
 });
-document.querySelector("#rsvp button").addEventListener("click", openModal);
-
-window.addEventListener("touchmove", handleTouchMove, false);
-window.addEventListener("touchstart", handleTouchStart, false);
-
-fetchInvitees();
 
 async function fetchInvitees() {
-    // Start UI while data is loading
-    hideLoadingScreen(); // ✅ Don't wait
+    // show UI while data is loading
+    hideLoadingScreen();
 
-    try {
-        const response = await fetch('[AppScriptUrl]');
-        invitees = await response.json();
-    } catch (error) {
-        console.error("Error fetching invitees:", error);
-        showErrorScreen();
-        return;
-    }
+    // If you later enable real fetch, keep it here
+    // try {
+    //   const response = await fetch('[AppScriptUrl]');
+    //   invitees = await response.json();
+    // } catch (error) {
+    //   console.error("Error fetching invitees:", error);
+    //   showErrorScreen();
+    //   return;
+    // }
 
-    checkGuestFromURL(); // ✅ Now runs after data is fetched
+    checkGuestFromURL();
 }
-
 
 function checkGuestFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
-    let encodedKey = urlParams.get("key");
+    // let encodedKey = urlParams.get("key");
+    console.log("Encoded Key:", encodedKey);
 
     if (!encodedKey) return showErrorScreen();
 
     encodedKey = decodeURIComponent(encodedKey);
     const guestName = decodeName(encodedKey);
+    console.log("Decoded Guest Name:", guestName);
+
     const foundInvitee = invitees.find(inv => inv.name === guestName);
 
     if (foundInvitee) {
         selectedInvitee = foundInvitee;
-        hideLoadingScreen(); // Slide transition starts here
+        // keep intro visible until they click start
     } else {
         showErrorScreen();
     }
 }
 
-
-function handleTouchStart(evt) {
-    xDown = evt.touches[0].clientX;
-}
-
-function handleTouchMove(evt) {
-    if (!xDown) return;
-
-    let xUp = evt.touches[0].clientX;
-    let xDiff = xDown - xUp;
-
-    // Prevent swipe when on the first slide (index 0)
-    if (currentIndex === 0) return;
-
-    if (xDiff > 0) {
-        nextSlide();
-    } else {
-        prevSlide();
-    }
-
-    xDown = null;
-}
-
+/* =========
+   NEW UX FLOW
+   ========= */
 function firstSlide() {
-    music.play();
-    isPlaying = false;
-    toggleMusic();
-    nextSlide();
-}
-
-function nextSlide() {
-    if (currentIndex === 0) {
-        isPlaying = false;
+    // Start music in a user gesture (allowed by browsers)
+    if (!isPlaying) {
         toggleMusic();
     }
-    if (currentIndex < slides.length - 1) {
-        currentIndex++;
-        updateSlidePosition();
-    }
+
+    // Hide intro screen
+    const intro = document.getElementById("intro-screen");
+    if (intro) intro.classList.add("hidden");
+
+    // Show scroll page
+    const scrollPage = document.getElementById("scrollPage");
+    if (scrollPage) scrollPage.style.display = "block";
+
+    // Optional: show sticky countdown after intro (your choice)
+    // document.getElementById("sticky-countdown").style.display = "block";
+
+    // Start at top of content
+    window.scrollTo({ top: 0, behavior: "instant" });
 }
 
-function prevSlide() {
-    if (currentIndex > 1) {
-        currentIndex--;
-        updateSlidePosition();
-    }
-}
-
-function updateSlidePosition() {
-    slides.forEach((slide, index) => {
-        slide.style.transform = `translateX(-${currentIndex * 100}vw)`;
-    });
-    // Show countdown ONLY if it's NOT the first slide
-    const countdown = document.getElementById("sticky-countdown");
-    if (currentIndex > 1) {
-        countdown.style.display = "block"; // Show countdown
-    } else {
-        countdown.style.display = "none";  // Hide countdown
-    }
-
-}
-
+/* =========
+   MUSIC
+   ========= */
 function toggleMusic() {
     if (isPlaying) {
         music.pause();
@@ -130,12 +102,10 @@ function toggleMusic() {
     isPlaying = !isPlaying;
 }
 
-function toggleMusicInitial() {
-    music.play();
-}
-
+/* =========
+   RSVP MODAL
+   ========= */
 function openModal() {
-    // If we already found a valid guest from the URL, show them
     if (selectedInvitee) {
         showGuest(selectedInvitee);
     }
@@ -158,8 +128,7 @@ function showGuest(invitee) {
     if (invitee.rsvp === "Confirmed") {
         guestCountDiv.style.display = "none";
         confirmBtn.style.display = "none";
-
-        nameField.innerHTML = `${invitee.name} confirmed for ${invitee.confirmedGuests} guest${invitee.confirmedGuests > 1 ? 's' : ''}`;
+        nameField.innerHTML = `${invitee.name} confirmed for ${invitee.confirmedGuests} guest${invitee.confirmedGuests > 1 ? "s" : ""}`;
     } else {
         if (invitee.maxGuests > 0) {
             guestCountDiv.style.display = "block";
@@ -175,8 +144,6 @@ function showGuest(invitee) {
     modal.style.display = "flex";
 }
 
-
-// Optimized confirmRSVP with better user experience (no visual changes)
 function confirmRSVP() {
     if (!selectedInvitee) return;
 
@@ -191,15 +158,12 @@ function confirmRSVP() {
         }
     }
 
-    // Disable confirm button to prevent multiple clicks
     const confirmBtn = document.getElementById("confirm-button");
     confirmBtn.disabled = true;
     confirmBtn.textContent = "Submitting...";
     spawnHearts();
 
-
-    // Send RSVP Data
-    fetch('[AppScriptUrl]', {
+    fetch("[AppScriptUrl]", {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
@@ -225,17 +189,13 @@ function confirmRSVP() {
         });
 }
 
-
 function showConfirmationPopup(message, isError = false) {
     const modal = document.getElementById("rsvp-confirm-modal");
     const messageElement = document.getElementById("confirmation-message");
 
     messageElement.innerHTML = message;
-
-    // Change color for errors (optional)
     messageElement.style.color = isError ? "red" : "black";
-
-    modal.style.display = "flex"; // Show modal
+    modal.style.display = "flex";
 }
 
 function closeConfirmationModal() {
@@ -244,118 +204,99 @@ function closeConfirmationModal() {
 
 function decodeName(encodedName) {
     return encodedName
-        .split('')
-        .map(char =>
-            String.fromCharCode(((char.charCodeAt(0) - 3 - 32 + 95) % 95) + 32)
-        )
-        .join('');
+        .split("")
+        .map(char => String.fromCharCode(((char.charCodeAt(0) - 3 - 32 + 95) % 95) + 32))
+        .join("");
 }
 
-function checkGuestFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    let encodedKey = urlParams.get("key");
-
-    if (encodedKey) {
-        encodedKey = decodeURIComponent(encodedKey);
-        const guestName = decodeName(encodedKey);
-
-        const foundInvitee = invitees.find(inv => inv.name === guestName);
-        if (foundInvitee) {
-            selectedInvitee = foundInvitee;
-            hideLoadingScreen(); // Only hide loading if the guest is valid
-        } else {
-            showErrorScreen(); // If guest is not found, show error
-        }
-    } else {
-        showErrorScreen(); // If no key exists, show error
-    }
-}
-
+/* =========
+   LOADING
+   ========= */
 function hideLoadingScreen() {
     const loadingScreen = document.getElementById("loading-screen");
-    loadingScreen.style.opacity = "0"; // Fade out
-    document.getElementById("slides").style.display = "flex";
+    loadingScreen.style.opacity = "0";
+    document.getElementById("slides").style.display = "block";
     setTimeout(() => {
-        loadingScreen.style.display = "none"; // Hide after fade-out
+        loadingScreen.style.display = "none";
     }, 500);
 }
 
+/* =========
+   ERROR SCREEN
+   ========= */
 function showErrorScreen() {
     document.body.innerHTML = `
-      <div class="background-wrapper">
-          <video class="background-video" autoplay loop muted playsinline>
-              <source src="background.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-          </video>
-          <div class="background-overlay"></div>
+    <div class="background-wrapper">
+      <video class="background-video" autoplay loop muted playsinline>
+        <source src="background.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div class="background-overlay"></div>
+    </div>
+    <div class="error-screen">
+      <div class="error-content">
+        <h1>Oops! This link is invalid.</h1>
+        <p>Please contact us for assistance.</p>
+        <div class="buttons">
+          <a href="https://wa.me/[GroomPhoneNumber]?text=Hello%2C%20I%20need%20help%20with%20my%20invitation%20link." class="contact-btn">Contact [GroomName]</a>
+          <a href="https://wa.me/[BridePhoneNumber]?text=Hello%2C%20I%20need%20help%20with%20my%20invitation%20link." class="contact-btn">Contact [BrideName]</a>
+        </div>
       </div>
-      <div class="error-screen">
-          <div class="error-content">
-              <h1>Oops! This link is invalid.</h1>
-              <p>Please contact us for assistance.</p>
-              <div class="buttons">
-                  <a href="https://wa.me/[GroomPhoneNumber]?text=Hello%2C%20I%20need%20help%20with%20my%20invitation%20link." class="contact-btn">Contact [GroomName]</a>
-                  <a href="https://wa.me/[BridePhoneNumber]?text=Hello%2C%20I%20need%20help%20with%20my%20invitation%20link." class="contact-btn">Contact [BrideName]</a>
-              </div>
-          </div>
-      </div>
-    `;
+    </div>
+  `;
 
-    // Apply styling for the error screen
     const style = document.createElement("style");
     style.innerHTML = `
-      .error-screen {
-          width: 100vw;
-          height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          color: white;
-      }
-  
-      .error-content {
-          background: rgba(0, 0, 0, 0.7);
-          padding: 20px;
-          border-radius: 10px;
-          width: 80%;
-          max-width: 400px;
-      }
-  
-      .buttons {
-          display: flex;
-          flex-direction: column;
-          gap: 15px; /* Adds space between buttons */
-          align-items: center;
-      }
-  
-      .contact-btn {
-          width: 100%; /* Make buttons full width */
-          max-width: 250px; /* Prevent too wide buttons */
-          text-align: center;
-          padding: 12px 20px;
-          font-size: 1.2rem;
-          background: white; /* Match confirm button */
-          color: black;
-          border: none;
-          border-radius: 30px;
-          cursor: pointer;
-          transition: background 0.3s, color 0.3s;
-          text-decoration: none;
-          font-weight: bold;
-      }
-    `;
+    .error-screen {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+    }
+    .error-content {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+    .contact-btn {
+      width: 100%;
+      max-width: 250px;
+      text-align: center;
+      padding: 12px 20px;
+      font-size: 1.2rem;
+      background: white;
+      color: black;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  `;
     document.head.appendChild(style);
 }
 
+/* =========
+   GUEST COUNTER
+   ========= */
 function decreaseGuest() {
     let guestInput = document.getElementById("guest-number");
     let minGuests = parseInt(guestInput.min, 10) || 1;
     let currentValue = parseInt(guestInput.value, 10) || minGuests;
 
-    if (currentValue > minGuests) {
-        guestInput.value = currentValue - 1;
-    }
+    if (currentValue > minGuests) guestInput.value = currentValue - 1;
 }
 
 function increaseGuest() {
@@ -363,101 +304,58 @@ function increaseGuest() {
     let maxGuests = parseInt(guestInput.max, 10) || 10;
     let currentValue = parseInt(guestInput.value, 10) || 1;
 
-    if (currentValue < maxGuests) {
-        guestInput.value = currentValue + 1;
-    }
+    if (currentValue < maxGuests) guestInput.value = currentValue + 1;
 }
 
+/* =========
+   COUNTDOWN
+   ========= */
 function startCountdown() {
     const countdownTimerElem = document.getElementById("countdown-timer");
+    if (!countdownTimerElem) return;
 
-    // Update every second
     const timerInterval = setInterval(() => {
         const now = new Date().getTime();
         const distance = weddingDate - now;
 
         if (distance <= 0) {
-            // If the countdown is finished, stop updating
             clearInterval(timerInterval);
-            countdownTimerElem.textContent = "It's happening now!";
             return;
         }
 
-        // Calculate days, hours, minutes, seconds
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // Display the result
         countdownTimerElem.innerHTML = `
-        <div><strong>${days}</strong><br>Days</div>
-        <div><strong>${hours}</strong><br>Hours</div>
-        <div><strong>${minutes}</strong><br>Min</div>
-        <div><strong>${seconds}</strong><br>Sec</div>
-      `;
-    }, 1000);
-}
-function startCountdownSticky() {
-    const countdownTimerElem = document.getElementById("countdown-timer-sticky");
-
-    setInterval(() => {
-        const now = new Date().getTime();
-        const distance = weddingDate - now;
-
-        if (distance <= 0) {
-            countdownTimerElem.innerHTML = "It's happening now!";
-            return;
-        }
-
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        countdownTimerElem.innerHTML = `<strong>${days}</strong> days <strong>${hours}</strong>h 
-                                        <strong>${minutes}</strong>m <strong>${seconds}</strong>s`;
+      <div><strong>${days}</strong><br>Days</div>
+      <div><strong>${hours}</strong><br>Hours</div>
+      <div><strong>${minutes}</strong><br>Min</div>
+      <div><strong>${seconds}</strong><br>Sec</div>
+    `;
     }, 1000);
 }
 
-function startExperience() {
-    const overlay = document.getElementById("tap-to-start-overlay");
-    overlay.style.opacity = "0"; // Fade out effect
-    setTimeout(() => {
-        overlay.style.display = "none"; // Hide completely after fade
-    }, 500);
-
-    // Start music (if applicable)
-    toggleMusic();
-
-}
-
+/* =========
+   HEARTS
+   ========= */
 function spawnHearts(count = 10) {
     for (let i = 0; i < count; i++) {
         setTimeout(() => {
             const heart = document.createElement("div");
             heart.className = "heart";
 
-            // Random horizontal position
-            const leftOffset = 40 + Math.random() * 20; // 40% to 60%
+            const leftOffset = 40 + Math.random() * 20;
             heart.style.left = `${leftOffset}%`;
-
-            // Random font size
             heart.style.fontSize = `${22 + Math.random() * 14}px`;
-
-            // Slight rotation
             heart.style.transform = `rotate(${Math.random() * 40 - 20}deg)`;
 
-            // Use various pink emojis for fun
             const emojis = ["💗", "💖", "💕", "💞"];
             heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
 
             document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 2500); // match CSS animation duration
-        }, i * 250); // space out creation: 150ms between each
+            setTimeout(() => heart.remove(), 2500);
+        }, i * 250);
     }
 }
-
