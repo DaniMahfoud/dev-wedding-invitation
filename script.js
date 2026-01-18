@@ -8,6 +8,10 @@ const music = document.getElementById("background-music");
 const musicButton = document.getElementById("music-button");
 const weddingDate = new Date("July 19, 2025 18:30:00").getTime();
 
+let GroomName = "Dani";
+let BrideName = "Eliane";
+
+
 // keep hardcoded const for testing
 let encodedKey = "Whvw#Idplo|";
 invitees = [
@@ -18,13 +22,20 @@ invitees = [
 
 document.addEventListener("DOMContentLoaded", () => {
     startCountdown();
-
+    const el = document.getElementById("couple-names");
+    if (el) {
+        el.textContent = `${GroomName} & ${BrideName}`;
+        if (el.nodeName === "TITLE") {
+            document.title = `${GroomName} & ${BrideName} Wedding Invitation`;
+        }
+    }
     // RSVP button listener (make sure #rsvp exists in DOM)
     const rsvpBtn = document.querySelector("#rsvp button");
     if (rsvpBtn) rsvpBtn.addEventListener("click", openModal);
 
     fetchInvitees();
 });
+
 
 async function fetchInvitees() {
     // show UI while data is loading
